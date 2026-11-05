@@ -442,15 +442,12 @@ docs-build: docs-clean			## Build documentation
 	@echo $(INFO) Building documentation...
 ifeq ($(IS_WINDOWS),1)
 	uv run sphinx-build -b html docs docs\_build\html -E -a -j auto --keep-going
-	uv run sphinx-build -b html docs\en docs\_build\html\en -E -a -j auto --keep-going
 else
 	uv run sphinx-build -b html docs docs/_build/html -E -a -j auto --keep-going
-	uv run sphinx-build -b html docs/en docs/_build/html/en -E -a -j auto --keep-going
 endif
 	@echo $(OK) Documentation built
 
-# autobuild rebuilds the Chinese tree live; the English tree is served
-# statically from the docs-build output.
+# autobuild rebuilds the Chinese tree live.
 .PHONY: docs-serve
 docs-serve: docs-build			## Serve the docs locally
 	@echo $(INFO) Starting live documentation server...

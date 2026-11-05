@@ -1,0 +1,18 @@
+# bililive_danmaku 服务配置模板。
+# 复制为 config.yaml 并填入真实值；敏感字段（upstream_secret、id_code）建议
+# 放入 .env 平铺覆盖（如 upstream_secret=xxx）。字段语义见 docs/data-format.md。
+#
+# 容器部署时 server_host 必须为 0.0.0.0 才能从宿主机访问。
+
+server_tokens:
+  - "把这里换成下游订阅用的 token"
+rooms:
+  - room_id: 0  # 换成真实直播间号
+    id_code: "换成该直播间的主播身份码"
+upstream_app_id: "0"  # 开放平台项目 ID（纯数字）
+upstream_key: "开放平台 access_key"
+upstream_secret: "开放平台 access_key_secret"
+# server_host: "0.0.0.0"  # 容器部署必须打开
+# server_port: 8181
+# upstream_host: "https://live-open.biliapi.com"
+# reconnect_interval: 5.0

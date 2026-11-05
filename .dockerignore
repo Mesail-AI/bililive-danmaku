@@ -1,0 +1,8 @@
+# 构建上下文只保留 pyproject.toml、uv.lock、src/ 与 README.md（pyproject 声明了它）
+*
+!pyproject.toml
+!uv.lock
+!README.md
+!src
+**/__pycache__
+src/**/__pycache__
