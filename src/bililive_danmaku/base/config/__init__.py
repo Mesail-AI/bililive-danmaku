@@ -1,3 +1,3 @@
-from .app import AppConfig
+from .app import AppConfig, RoomConfig
 
-__all__ = ("AppConfig",)
+__all__ = ("AppConfig", "RoomConfig")
