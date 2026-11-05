@@ -1,0 +1,64 @@
+name: CI
+
+# 阶段区分：
+#   draft PR        -> 仅执行代码测试（快速反馈）
+#   正式 PR         -> 测试 + docker 构建全流程
+#   合并后（push）  -> 测试 + docker 构建全流程
+# ready_for_review 类型必须显式声明，draft 转正式时才会重新触发工作流。
+on:
+  push:
+    branches: [main]
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Sync dependencies
+        run: uv sync --locked
+
+      - name: Ruff format check
+        run: uv run ruff format --check src tests test_integration
+
+      - name: Ruff lint
+        run: uv run ruff check src tests test_integration
+
+      - name: Mypy
+        run: uv run mypy
+
+      - name: Slotscheck
+        run: uv run slotscheck src
+
+      - name: Unit tests
+        run: uv run pytest tests -q
+
+      - name: Integration tests
+        run: uv run pytest test_integration -m integration -q
+        env:
+          # 缺少真实 config.yaml 时按设计 skip，不视为失败
+          SKIP: ""
+
+  docker:
+    # draft PR 跳过构建；正式 PR 与合并后执行
+    if: github.event_name != 'pull_request' || !github.event.pull_request.draft
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Build image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: false
+          load: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
