@@ -45,7 +45,7 @@ import aiohttp
 
 async with aiohttp.ClientSession() as session:
     ws = await session.ws_connect(
-        "http://127.0.0.1:8181/ws?room_id=23058938&token=你的token"
+        "ws://127.0.0.1:8181/ws?room_id=23058938&token=你的token"
     )
     async for msg in ws:
         print(msg.data)  # 上游事件原样 JSON，一行一帧
