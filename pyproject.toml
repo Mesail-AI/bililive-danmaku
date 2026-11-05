@@ -3,13 +3,17 @@ name = "bililive-danmaku"
 version = "0.1.0"
 description = "Bililive Danmaku - Danmaku transfer for bililive platform."
 readme = "README.md"
+license = { text = "MIT" }
 authors = [
     { name = "Ahsen17", email = "mesailedward@qq.com" }
 ]
 requires-python = ">=3.12"
 dependencies = [
+    "aiohttp",
+    "anyio",
     "dotenv",
     "msgspec",
+    "structlog",
 ]
 
 [build-system]
@@ -19,6 +23,9 @@ requires = ["hatchling", "setuptools"]
 [[tool.uv.index]]
 name = "tencent"
 url = "https://mirrors.cloud.tencent.com/pypi/simple/"
+
+[project.scripts]
+app = "bililive_danmaku.entrypoint:startup"
 
 [dependency-groups]
 dev = [
@@ -44,7 +51,6 @@ lint = [
 ]
 test = [
   "coverage",
-  "fakeredis",
   "pytest",
   "pytest-asyncio",
   "pytest-cov",
@@ -116,6 +122,9 @@ ignore = [
   "EXE",     # flake8-executable - missing shebang line
   "PLW2901", # pylint - for loop variable overwritten by assignment target
   "RUF012",  # Ruff-specific rule - annotated with classvar
+  "RUF001",  # Ruff-specific rule - ambiguous unicode in string（中文注释采用全角标点）
+  "RUF002",  # Ruff-specific rule - ambiguous unicode in docstring（同上）
+  "RUF003",  # Ruff-specific rule - ambiguous unicode in comment（同上）
   "ISC001",  # Ruff formatter incompatible
   "CPY001",  # ruff - copyright notice at the top of the file
   "PLC0414", # pylint - missing module docstring
